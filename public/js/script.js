@@ -76,4 +76,61 @@ document.addEventListener('DOMContentLoaded', () => {
         // Auto slide every 6 seconds
         setInterval(nextSlide, 6000);
     }
+
+    // 3. Modal Logic
+    const modal = document.getElementById('registrationModal');
+    if (modal) {
+        const closeBtn = document.querySelector('.close-modal');
+        const registerBtns = document.querySelectorAll('.btn-primary');
+        const eventInput = document.getElementById('eventName');
+        const form = document.getElementById('registrationForm');
+
+        // Open Modal
+        registerBtns.forEach(btn => {
+            // Only attach to buttons that look like registration buttons inside event items
+            if (btn.closest('.event-item')) {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    // Get event name from the card
+                    const card = btn.closest('.event-item');
+                    let eventName = "Event";
+                    if (card) {
+                        const title = card.querySelector('h3');
+                        if (title) eventName = title.innerText;
+                    }
+
+                    eventInput.value = eventName;
+                    modal.classList.add('active');
+                    document.body.style.overflow = 'hidden'; // Prevent scrolling
+                });
+            }
+        });
+
+        // Close Modal
+        const closeModal = () => {
+            modal.classList.remove('active');
+            document.body.style.overflow = '';
+        };
+
+        if (closeBtn) closeBtn.addEventListener('click', closeModal);
+
+        // Close on outside click
+        window.addEventListener('click', (e) => {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+
+        // Form Submit
+        if (form) {
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const name = document.getElementById('name').value;
+                const event = eventInput.value;
+                alert(`Awesome, ${name}! You're registered for ${event}.\nWe'll send you an email with details shortly.`);
+                closeModal();
+                form.reset();
+            });
+        }
+    }
 });
